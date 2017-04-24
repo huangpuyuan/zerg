@@ -9,6 +9,7 @@
 namespace app   \api\controller\v1;
 
 // use think\Validate;
+use app\api\validate\IDMustBePositiveInt;
 use app\api\validate\TestValidate;
 
 class Banner
@@ -21,23 +22,20 @@ class Banner
      * */
     public function getBanner($id)
     {
-        // 独立验证和验证器 有很多默认验证规则
+//      独立验证和验证器 有很多默认验证规则
+//      验证器的封装性 拦截器
+//        $validate = new TestValidate();
+        (new IDMustBePositiveInt())->goCheck();
+//        return 'suceess';
 
-        $data = [
-            'name' => 'vendor11111',
-            'email' => 'vendorqq.com'
-        ];
-
-//        $validate = new Validate([
-//           'name'=>'require|max:10',
-//            'email'=> 'email'
-//        ]);
-//   验证器的封装性
-
-        $validate = new TestValidate();
-        $result = $validate->batch()->check($data);
-
-        var_dump($validate->getError());
+//        $validate = new IDMustBePositiveInt();
+//        $result = $validate->batch()->check($data);
+//        if ($result){
+//
+//        }else{
+//
+//        }
+//        var_dump($validate->getError());
 
 
     }
