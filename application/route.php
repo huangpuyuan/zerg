@@ -11,7 +11,5 @@
 
 use think\Route;
 
-// Route::rule('路由表达式','路由地址','请求类型 默认为*','路由参数'，'变量规则');
-// Route::rule('hello','sample/Test/hello','GET',['https'=>false]);
-//Route::rule('hello','sample/Test/hello','GET|POST',['https'=>false]);
-Route::post('hello/:id','sample/Test/hello');
+// 三段式的url 第一段是模块名api，第二段是控制器名 控制器子目录下的类名中间用点来连接，第三段是操作方法名
+Route::get('banner/:id','api/v1.Banner/getBanner');
