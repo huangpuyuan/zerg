@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Administrator
+ * User: kaitai
  * Date: 2017/4/25
  * Time: 10:39
  */
@@ -11,6 +11,7 @@ namespace app\lib\exception;
 
 use think\Exception;
 use think\exception\Handle;
+use think\Log;
 use think\Request;
 
 class ExceptionHandler extends Handle
@@ -29,10 +30,17 @@ class ExceptionHandler extends Handle
             $this->msg = $e->msg;
             $this->errorCode = $e->errorCode;
         } else {
-            $this->code = 500;
-            $this->msg = '服务器内置错误，不想告诉你哦';
-            $this->errorCode = 999;
+            if (config('app_debug')) {
+                // return default error page
+                return parent::render($e);
+            } else {
+                $this->code = 500;
+                $this->msg = '服务器内置错误，不想告诉你哦';
+                $this->errorCode = 999;
+                $this->recordErrorLog($e);
+            }
         }
+
         $request = Request::instance();
 
         $result = [
@@ -42,5 +50,15 @@ class ExceptionHandler extends Handle
         ];
 
         return json($result, $this->code);
+    }
+
+    private function recordErrorLog(Exception $e)
+    {
+        Log::init([
+            'type' => 'file',
+            'path' => LOG_PATH,
+            'level' => ['error']
+        ]);
+        Log::record($e->getMessage(), 'error');
     }
 }
